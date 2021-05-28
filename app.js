@@ -13,20 +13,20 @@ var DB = {
         {
             id: 23,
             title: 'Call of Duty MW',
-            ano: 2019,
-            preco: 60
+            year: 2019,
+            price: 60
         },
         {
             id: 24,
             title: 'Grand Theft Auto V',
-            ano: 2013,
-            preco: 100
+            year: 2013,
+            price: 100
         },
         {
             id: 25,
             title: 'The Last Of Us Part II',
-            ano: 2020,
-            preco: 149.90
+            year: 2020,
+            price: 149.90
         }
     ]
 }
@@ -52,10 +52,70 @@ app.get('/game/:id', (req, res) => {
     }
 });
 
+app.post('/game', (req, res) => {
+    let {id, title, year, price} = req.body;
+
+    DB.games.push({
+        id,
+        title,
+        year,
+        price
+    });
+
+    res.sendStatus(200);
+});
+
+app.delete('/game/:id', (req, res) => {
+    if (isNaN(req.params.id)) {
+        res.sendStatus(400);
+    } else {
+        let id = parseInt(req.params.id);
+        let index = DB.games.findIndex(g => g.id == id);
+
+        if (index == -1) {
+            res.sendStatus(404);
+        } else {
+            DB.games.splice(index,1);
+            res.sendStatus(200);
+        }
+    }
+});
+
+app.put('/game/:id', (req, res) => {
+    if (isNaN(req.params.id)) {
+        res.sendStatus(400);
+    } else {
+        let id = parseInt(req.params.id);
+        let game = DB.games.find(g => g.id == id);
+
+        if (game != undefined) {
+            
+            let {id, title, year, price} = req.body;
+
+            if (title != undefined) {
+                game.title = title;
+            }
+
+            if (year != undefined) {
+                game.year = year;
+            }
+
+            if (price != undefined) {
+                game.price = price;
+            }
+
+            res.sendStatus(200)
+
+        } else {
+            res.sendStatus(404);
+        }
+    }
+})
+
 
 
 
 app.listen(process.env.SERVER_PORT, () => {
-    console.log(`Servidor rodando na porta: ${process.env.SERVER_PORT}`)
+    console.log(`Servidor rodando na porta: http://localhost:${process.env.SERVER_PORT}`)
 })
 
