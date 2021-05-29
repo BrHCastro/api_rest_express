@@ -85,7 +85,7 @@ const User = connection.define('users', {
 app.get('/games', auth, (req, res) => {
     Game.findAll().then(games => {
         res.statusCode = 200;
-        res.json({user: req.loggedUder, games: games});
+        res.json(games);
     }).catch(err => {
         res.sendStatus(417);
     });

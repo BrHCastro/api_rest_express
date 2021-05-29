@@ -28,6 +28,12 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 
+    var axiosConfig = {
+        headers: {
+            Authorization: "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoZW5kZWNhc3Ryb0BnbWFpbC5jb20iLCJpYXQiOjE2MjIzMTg1NTQsImV4cCI6MTYyMjQ5MTM1NH0.nybMLZXXwW2hGzRFYHFvC_y5pVkwZ7AvZVgVQILzf2o"
+        }
+    }
+
     function deleteGame(listItem) {
         let id = listItem.getAttribute('data-id');
 
@@ -108,7 +114,7 @@
         });
     });
 
-    axios.get('http://localhost:3001/games').then(response => {
+    axios.get('http://localhost:3001/games', axiosConfig).then(response => {
         var games = response.data;
         var list = document.querySelector('#ltGames');
 
@@ -139,7 +145,7 @@
         })
 
     }).catch(err => {
-        console.log(err);
+        alert(err);
     });
 </script>
 </html>
