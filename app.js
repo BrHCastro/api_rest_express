@@ -1,6 +1,7 @@
 require('dotenv/config')
 const express = require('express');
 const bodyParser = require('body-parser');
+const Sequelize = require('sequelize');
 
 const app = express();
 
@@ -8,61 +9,74 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-var DB = {
-    games: [
-        {
-            id: 23,
-            title: 'Call of Duty MW',
-            year: 2019,
-            price: 60
-        },
-        {
-            id: 24,
-            title: 'Grand Theft Auto V',
-            year: 2013,
-            price: 100
-        },
-        {
-            id: 25,
-            title: 'The Last Of Us Part II',
-            year: 2020,
-            price: 149.90
-        }
-    ]
-}
+const connection = new Sequelize(process.env.DATABASE,process.env.USER_NAME,process.env.PASS, {
+    host: process.env.HOST,
+    dialect: 'mysql',
+    timezone: "-03:00"
+});
+
+console.log(connection)
+
+const Game = connection.define('games', {
+    title: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    year: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    price: {
+        type: Sequelize.FLOAT,
+        allowNull: false
+    }
+});
 
 app.get('/games', (req, res) => {
-    res.statusCode = 200;
-    res.json(DB.games);
-})
+    Game.findAll().then(games => {
+        res.statusCode = 200;
+        res.json(games);
+    }).catch(err => {
+        res.sendStatus(417);
+    });
+});
 
 app.get('/game/:id', (req, res) => {
     if (isNaN(req.params.id)) {
         res.sendStatus(400);
     } else {
         let id = parseInt(req.params.id);
-        let game = DB.games.find(g => g.id == id);
 
-        if (game != undefined) {
-            res.statusCode = 200;
-            res.json(game);
-        } else {
-            res.sendStatus(404);
-        }
+        Game.findOne({
+            where: {id: id}
+        }).then((game) => {
+
+            if (game != undefined) {
+                res.statusCode = 200;
+                res.json(game);
+            } else {
+                res.sendStatus(404);
+            }
+
+        }).catch((err) => {
+            res.sendStatus(417);
+        })
     }
 });
 
 app.post('/game', (req, res) => {
-    let {id, title, year, price} = req.body;
+    let {title, year, price} = req.body;
 
-    DB.games.push({
-        id,
-        title,
-        year,
-        price
-    });
+    Game.create({
+        title: title,
+        year: year,
+        price: price
+    }).then(() => {
+        res.sendStatus(200);
+    }).catch((err) => {
+        res.sendStatus(417);
+    })
 
-    res.sendStatus(200);
 });
 
 app.delete('/game/:id', (req, res) => {
@@ -70,14 +84,21 @@ app.delete('/game/:id', (req, res) => {
         res.sendStatus(400);
     } else {
         let id = parseInt(req.params.id);
-        let index = DB.games.findIndex(g => g.id == id);
 
-        if (index == -1) {
-            res.sendStatus(404);
-        } else {
-            DB.games.splice(index,1);
-            res.sendStatus(200);
-        }
+        Game.destroy({
+            where: { id: id}
+        }).then((index) => {
+
+            if (index < 1) {
+                res.sendStatus(404);
+            } else {
+                res.sendStatus(200);
+                console.log(index)
+            }
+
+        }).catch((err) => {
+            res.sendStatus(417);
+        });
     }
 });
 
@@ -86,29 +107,19 @@ app.put('/game/:id', (req, res) => {
         res.sendStatus(400);
     } else {
         let id = parseInt(req.params.id);
-        let game = DB.games.find(g => g.id == id);
-
-        if (game != undefined) {
-            
-            let {id, title, year, price} = req.body;
-
-            if (title != undefined) {
-                game.title = title;
-            }
-
-            if (year != undefined) {
-                game.year = year;
-            }
-
-            if (price != undefined) {
-                game.price = price;
-            }
-
+        let {title, year, price} = req.body;
+        
+        Game.update({
+            title: title,
+            year: year,
+            price: price
+        },{
+            where: {id: id}
+        }).then(() => {
             res.sendStatus(200)
-
-        } else {
+        }).catch(() => {
             res.sendStatus(404);
-        }
+        });
     }
 })
 
