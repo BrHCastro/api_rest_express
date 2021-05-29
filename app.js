@@ -2,8 +2,11 @@ require('dotenv/config')
 const express = require('express');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -14,8 +17,6 @@ const connection = new Sequelize(process.env.DATABASE,process.env.USER_NAME,proc
     dialect: 'mysql',
     timezone: "-03:00"
 });
-
-console.log(connection)
 
 const Game = connection.define('games', {
     title: {
