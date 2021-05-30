@@ -124,7 +124,7 @@ Crie um arquivo *.env*:
 Curso formação Node.Js em https://guiadoprogramador.com/
 
 ## Licença
-Projeto está sob licença do [MIT]("https://opensource.org/licenses/mit-license.php")
+Projeto está sob licença do [MIT](https://opensource.org/licenses/mit-license.php)
 
 ---
 
