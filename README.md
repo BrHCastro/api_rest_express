@@ -1,5 +1,6 @@
 ![dev](https://img.shields.io/badge/@BrHCastro-API%20--%20Rest-orange)
 ![license](https://img.shields.io/github/license/brhcastro/api_rest_express)
+![Version](https://img.shields.io/github/package-json/v/brhcastro/api_rest_express)
 
 # API CRUD Games
 
