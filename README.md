@@ -2,7 +2,7 @@
 ![license](https://img.shields.io/github/license/brhcastro/api_rest_express)
 ![Version](https://img.shields.io/github/package-json/v/brhcastro/api_rest_express)
 
-# API CRUD Games
+# :video_game: API CRUD Games
 
 API desenvolvida durante o curso **[Formação Node.js](https://guiadoprogramador.com/course/index/7/7#_)**.
 
