@@ -1,3 +1,6 @@
+![dev](https://img.shields.io/badge/@BrHCastro-API%20--%20Rest-orange)
+![license](https://img.shields.io/github/license/brhcastro/api_rest_express)
+
 # API CRUD Games
 
 API desenvolvida durante o curso **[Formação Node.js](https://guiadoprogramador.com/course/index/7/7#_)**.
